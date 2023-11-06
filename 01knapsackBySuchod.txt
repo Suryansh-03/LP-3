@@ -1,0 +1,32 @@
+def knapsack_dynamic_programming(values, weights, capacity):
+    n = len(values)
+    dp = [0] * (capacity + 1)
+
+    for i in range(n):
+        for w in range(capacity, weights[i] - 1, -1):
+            dp[w] = max(dp[w], values[i] + dp[w - weights[i]])
+
+    max_value = dp[capacity]
+    selected_items = []
+    w = capacity
+
+    for i in range(n - 1, -1, -1):
+        if max_value <= 0:
+            break
+        if max_value != dp[w]:
+            selected_items.append(i)
+            max_value -= values[i]
+            w -= weights[i]
+
+    selected_items = selected_items[::-1]
+    return dp[capacity], selected_items
+
+# Taking user input for values, weights, and capacity
+values = list(map(int, input("Enter the values (separated by space): ").split()))
+weights = list(map(int, input("Enter the weights (separated by space): ").split()))
+capacity = int(input("Enter the maximum capacity: "))
+
+# Calling the knapsack_dynamic_programming function with user input
+max_value, selected_items = knapsack_dynamic_programming(values, weights, capacity)
+
+print("Maximum value in the knapsack:", max_value)
